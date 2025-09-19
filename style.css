@@ -1,0 +1,27 @@
+/* dynamic list of category name */
+#categories-ul {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* category link */
+.category-link {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: background 0.3s, color 0.3s;
+}
+
+ /* hover system */
+.category-link:hover {
+  background-color: #15803d;
+  color: white;
+  cursor: pointer;
+}
+
+/* active */
+.category-link.active-category {
+  background-color: #15803d;
+  color: white;
+}
