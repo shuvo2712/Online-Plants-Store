@@ -1,57 +1,6 @@
-// load categories
-function loadCategories() {
-  fetch("https://openapi.programming-hero.com/api/categories")
-    .then((res) => res.json())
-    .then((data) => displayCategories(data.categories));
-}
+let total = 0;
 
-// display categories / left section
-function displayCategories(categories) {
-  const categoriesUL = document.getElementById("categories-ul");
-  categoriesUL.innerHTML = "";
-
-  categories.forEach((category) => {
-    const li = document.createElement("li");
-    li.innerHTML = `<a class="category-link" onclick="selectCategory(this, ${category.id})">
-                      ${category.category_name}
-                    </a>`;
-    categoriesUL.appendChild(li);
-  });
-}
-
-// function to handle active state
-function selectCategory(element, id) {
-  // Remove active from all
-  const links = document.querySelectorAll(".category-link");
-  links.forEach((link) => link.classList.remove("active-category"));
-
-  // Add active to clicked
-  element.classList.add("active-category");
-
-  // Load trees by category
-  loadTreesByCategory(id);
-}
-
-
-// .................
-// load trees by category
-function loadTreesByCategory(id) {
-  const spinner = document.getElementById("spinner");
-  const container = document.getElementById("treesSection");
-
-  spinner.classList.remove("hidden");
-  container.classList.add("hidden");
-
-  fetch(`https://openapi.programming-hero.com/api/category/${id}`)
-    .then((res) => res.json())
-    .then((data) => displayTrees(data.plants))
-    .finally(() => {
-      spinner.classList.add("hidden");
-      container.classList.remove("hidden");
-    }); // hide spinner
-}
-
-// load all trees
+// Load All Trees
 function loadAllTrees() {
   const spinner = document.getElementById("spinner");
   const container = document.getElementById("treesSection");
@@ -61,6 +10,7 @@ function loadAllTrees() {
 
   fetch("https://openapi.programming-hero.com/api/plants")
     .then((res) => res.json())
+    // displayTrees()
     .then((data) => displayTrees(data.plants))
     .finally(() => {
       spinner.classList.add("hidden");
@@ -68,26 +18,7 @@ function loadAllTrees() {
     });
 }
 
-// show MODAL
-function loadModal(id) {
-  fetch(`https://openapi.programming-hero.com/api/plant/${id}`)
-    .then((res) => res.json())
-    .then((data) => displayModal(data.plants));
-}
-
-function displayModal(plant) {
-  const modalContainer = document.getElementById("modal-Container");
-  modalContainer.innerHTML = `
-            <img class="h-1/2 w-1/2" src="${plant.image}" alt="" />
-            <h1 class="font-semibold text-green-700" >${plant.name}</h1>
-            <p class="font-light" >${plant.description}</p>
-            <h1 class="btn bg-[#DCFCE7] text-[#15803d] rounded-full" >${plant.category}</h1>
-            <h1 class="font-bold text-red-500">$${plant.price}</h1>
-  `;
-  document.getElementById("my_modal").showModal();
-}
-
-// display trees / middle section
+// Display Trees / Middle Section
 function displayTrees(plants) {
   const plantsContainer = document.getElementById("plants-container");
   plantsContainer.innerHTML = "";
@@ -110,9 +41,102 @@ function displayTrees(plants) {
   });
 }
 
-// Add to Cart
+// Load Categories
+function loadCategories() {
+  fetch("https://openapi.programming-hero.com/api/categories")
+    .then((res) => res.json())
+    // displayCategories()
+    .then((data) => displayCategories(data.categories));
+}
 
-let total = 0;
+// Display Categories / Left Section
+function displayCategories(categories) {
+  const categoriesUL = document.getElementById("categories-ul");
+  categoriesUL.innerHTML = "";
+
+  // add (All Trees) category first
+  const allLi = document.createElement("li");
+  allLi.innerHTML = `<a class="category-link active-category" onclick="loadTreesByAllCategory(this)">
+                      All Trees
+                    </a>`;
+  categoriesUL.appendChild(allLi);
+
+  // loop through API categories
+  categories.forEach((category) => {
+    const li = document.createElement("li");
+    li.innerHTML = `<a class="category-link" onclick="toggleCategory(this, ${category.id})">
+                      ${category.category_name}
+                    </a>`;
+    categoriesUL.appendChild(li);
+  });
+}
+
+// Load Trees by All Trees Category Btn
+function loadTreesByAllCategory(element) {
+  const links = document.querySelectorAll(".category-link");
+
+  // Remove active from all
+  links.forEach((link) => link.classList.remove("active-category"));
+
+  // Add active to clicked
+  element.classList.add("active-category");
+
+  // loadAllTrees()
+  loadAllTrees();
+}
+
+// Load Trees by Category Btn
+function loadTreesByCategory(id) {
+  const spinner = document.getElementById("spinner");
+  const container = document.getElementById("treesSection");
+
+  spinner.classList.remove("hidden");
+  container.classList.add("hidden");
+
+  fetch(`https://openapi.programming-hero.com/api/category/${id}`)
+    .then((res) => res.json())
+    .then((data) => displayTrees(data.plants))
+    .finally(() => {
+      spinner.classList.add("hidden");
+      container.classList.remove("hidden");
+    }); // hide spinner
+}
+
+// Toggle Active State
+function toggleCategory(element, id) {
+  // Remove active from all
+  const links = document.querySelectorAll(".category-link");
+  links.forEach((link) => link.classList.remove("active-category"));
+
+  // Add active to clicked
+  element.classList.add("active-category");
+
+  // Load trees by category
+  loadTreesByCategory(id);
+}
+
+// Show MODAL
+function loadModal(id) {
+  fetch(`https://openapi.programming-hero.com/api/plant/${id}`)
+    .then((res) => res.json())
+    .then((data) => displayModal(data.plants));
+}
+
+// Display MODAL
+function displayModal(plant) {
+  const modalContainer = document.getElementById("modal-Container");
+  modalContainer.innerHTML = `
+            <img class="h-1/2 w-1/2" src="${plant.image}" alt="" />
+            <h1 class="font-semibold text-green-700" >${plant.name}</h1>
+            <p class="font-light" >${plant.description}</p>
+            <h1 class="btn bg-[#DCFCE7] text-[#15803d] rounded-full" >${plant.category}</h1>
+            <h1 class="font-bold text-red-500">$${plant.price}</h1>
+  `;
+  document.getElementById("my_modal").showModal();
+}
+
+// CART
+// Add to Cart Btn
 function addToCart(name, price) {
   // console.log(name, price);
   const cartContainer = document.getElementById("cart-Container");
@@ -142,7 +166,7 @@ function addToCart(name, price) {
   document.getElementById("cart-Total").innerText = total.toFixed(2);
 }
 
-// remove from cart
+// Remove from Cart
 function removeFromCart(elem, price) {
   // remove the parent div
   elem.closest("div.flex").remove();
@@ -151,13 +175,13 @@ function removeFromCart(elem, price) {
   document.getElementById("cart-Total").innerText = total.toFixed(2);
 }
 
-// clear cart
+// Clear Cart
 function clearCart() {
   document.getElementById("cart-Container").innerHTML = "";
   total = 0;
   document.getElementById("cart-Total").innerText = total.toFixed(2);
 }
 
-// ...... load at start
+// ...... Load At Start
 loadCategories();
 loadAllTrees();
