@@ -26,11 +26,11 @@ function displayTrees(plants) {
     console.log(plant);
     const plantDiv = document.createElement("div");
     plantDiv.innerHTML = `
-        <div class="bg-white p-3 rounded-xl flex flex-col gap-2 h-full ">
+        <div onclick="loadModal(${plant.id})" class="bg-white p-3 rounded-xl flex flex-col gap-2 h-full cursor-pointer">
               <img
               class="w-full h-48 object-cover rounded-lg" src="${plant.image}" alt="">
-              <h1 onclick="loadModal(${plant.id})" class="font-semibold cursor-pointer">${plant.name}</h1>
-              <p class="font-light">${plant.description}</p>
+              <h1 class="font-semibold">${plant.name}</h1>
+              <p class="font-light plant-description">${plant.description}</p>
               <div class="flex justify-between mt-auto">
                 <button class="btn bg-[#DCFCE7] text-[#15803d] rounded-full">${plant.category}</button>
                 <p>$${plant.price}</p>
@@ -115,22 +115,23 @@ function toggleCategory(element, id) {
   loadTreesByCategory(id);
 }
 
-// Show MODAL
+// MODAL
+// Load Modal
 function loadModal(id) {
   fetch(`https://openapi.programming-hero.com/api/plant/${id}`)
     .then((res) => res.json())
     .then((data) => displayModal(data.plants));
 }
 
-// Display MODAL
+// Display Modal
 function displayModal(plant) {
   const modalContainer = document.getElementById("modal-Container");
   modalContainer.innerHTML = `
             <img class="h-1/2 w-1/2" src="${plant.image}" alt="" />
             <h1 class="font-semibold text-green-700" >${plant.name}</h1>
+            <h1 class="font-semibold text-red-400">$${plant.price}</h1>
             <p class="font-light" >${plant.description}</p>
             <h1 class="btn bg-[#DCFCE7] text-[#15803d] rounded-full" >${plant.category}</h1>
-            <h1 class="font-bold text-red-500">$${plant.price}</h1>
   `;
   document.getElementById("my_modal").showModal();
 }

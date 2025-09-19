@@ -27,3 +27,11 @@
   color: white;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
+
+/* shortening plant description */
+.plant-description {
+  white-space: nowrap; /* makes it 1 line */
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding-bottom: 15px;
+}
