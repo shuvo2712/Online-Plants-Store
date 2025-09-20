@@ -35,7 +35,7 @@ function displayTrees(plants) {
                 <button class="btn bg-[#DCFCE7] text-[#15803d] rounded-full">${plant.category}</button>
                 <p>$${plant.price}</p>
               </div>
-              <button onclick="addToCart('${plant.name}', ${plant.price})" class="btn bg-[#15803d] text-white w-full rounded-full">Add to Cart</button>
+              <button onclick="event.stopPropagation(); addToCart('${plant.name}', ${plant.price})" class="btn bg-[#15803d] text-white w-full rounded-full">Add to Cart</button>
             </div>`;
     plantsContainer.appendChild(plantDiv);
   });
